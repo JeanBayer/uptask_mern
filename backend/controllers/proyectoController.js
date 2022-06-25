@@ -1,6 +1,11 @@
 import Proyecto from "../models/Proyecto.js";
 
-const obtenerProyectos = (req, res) => {};
+const obtenerProyectos = async (req, res) => {
+  const proyectos = await Proyecto.find()
+    .where("creador")
+    .equals(req.usuario._id);
+  res.send(proyectos);
+};
 
 const nuevoProyecto = async (req, res) => {
   const proyecto = new Proyecto(req.body);
@@ -13,7 +18,7 @@ const nuevoProyecto = async (req, res) => {
   }
 };
 
-const obtenerProyecto = (req, res) => {};
+const obtenerProyecto = async (req, res) => {};
 
 const editarProyecto = (req, res) => {};
 
