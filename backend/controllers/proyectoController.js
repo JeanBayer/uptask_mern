@@ -1,4 +1,5 @@
 import Proyecto from "../models/Proyecto.js";
+import Tarea from "../models/Tarea.js";
 
 const obtenerProyectos = async (req, res) => {
   const proyectos = await Proyecto.find()
@@ -29,7 +30,10 @@ const obtenerProyecto = async (req, res) => {
     const error = new Error("No tienes permisos para ver este proyecto");
     return res.status(401).send({ msg: error.message });
   }
-  res.send(proyecto);
+
+  const tareas = await Tarea.find().where("proyecto").equals(proyecto._id);
+
+  res.send({ proyecto, tareas });
 };
 
 const editarProyecto = async (req, res) => {
@@ -81,7 +85,6 @@ const agregarColaborador = (req, res) => {};
 
 const eliminarColaborador = (req, res) => {};
 
-const obtenerTareas = (req, res) => {};
 
 export {
   obtenerProyectos,
@@ -91,5 +94,4 @@ export {
   eliminarProyecto,
   agregarColaborador,
   eliminarColaborador,
-  obtenerTareas,
 };
