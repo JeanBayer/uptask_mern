@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import Alerta from "../components/Alerta";
 
 const Registrar = () => {
@@ -9,7 +10,7 @@ const Registrar = () => {
   const [confirmarPassword, setConfirmarPassword] = useState("");
   const [alerta, setAlerta] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setAlerta("");
 
@@ -21,6 +22,35 @@ const Registrar = () => {
     if (password !== confirmarPassword) {
       setAlerta({ msg: "Las contraseñas no coinciden", error: true });
       return;
+    }
+
+    if (password.length < 6) {
+      setAlerta({
+        msg: "La contraseña es muy corta, agrega mínimo 6 caracteres",
+        error: true,
+      });
+      return;
+    }
+
+    setAlerta({});
+
+    // Enviar el request al backend
+    try {
+      const url = `${import.meta.env.VITE_BACKEND_URL}/api/usuarios`;
+      const { data } = await axios.post(url, {
+        nombre,
+        email,
+        password,
+      });
+
+      setAlerta({ msg: data.msg, error: false });
+      setNombre("");
+      setEmail("");
+      setPassword("");
+      setConfirmarPassword("");
+    } catch (error) {
+      const { msg } = error.response.data;
+      setAlerta({ msg, error: true });
     }
   };
 
