@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import clienteAxios from "../../config/clienteAxios";
 import Alerta from "../components/Alerta";
 
 const Registrar = () => {
@@ -36,8 +36,8 @@ const Registrar = () => {
 
     // Enviar el request al backend
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/api/usuarios`;
-      const { data } = await axios.post(url, {
+      const url = "/usuarios";
+      const { data } = await clienteAxios.post(url, {
         nombre,
         email,
         password,
