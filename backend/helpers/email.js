@@ -3,11 +3,11 @@ import nodemailer from "nodemailer";
 export const emailRegistro = async (datos) => {
   const { email, nombre, token } = datos;
   const transport = nodemailer.createTransport({
-    host: process.env.NODEMAILER_HOST,
-    port: 2525,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
     auth: {
-      user: process.env.NODEMAILER_USER,
-      pass: process.env.NODEMAILER_PASS,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
@@ -27,11 +27,11 @@ export const emailRegistro = async (datos) => {
 export const emailRecuperar = async (datos) => {
   const { email, nombre, token } = datos;
   const transport = nodemailer.createTransport({
-    host: process.env.NODEMAILER_HOST,
-    port: 2525,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
     auth: {
-      user: process.env.NODEMAILER_USER,
-      pass: process.env.NODEMAILER_PASS,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
