@@ -55,6 +55,7 @@ const ProyectosProvider = ({ children }) => {
     try {
       const { data } = await clienteAxios.post("/proyectos", proyecto, config);
       setAlerta({ msg: "Proyecto creado", error: false });
+      setProyectos([...proyectos, data]);
       setTimeout(() => {
         setAlerta({});
         navigate("/proyectos");
