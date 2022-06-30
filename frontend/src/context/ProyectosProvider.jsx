@@ -10,6 +10,29 @@ const ProyectosProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const obtenerProyectos = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setAlerta({ msg: "Token no valido", error: true });
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      try {
+        const { data } = await clienteAxios("/proyectos", config);
+        setProyectos(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    obtenerProyectos();
+  }, []);
+
   const mostrarAlerta = (alerta) => {
     setAlerta(alerta);
     setTimeout(() => {
