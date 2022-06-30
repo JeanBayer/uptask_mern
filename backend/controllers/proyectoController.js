@@ -31,9 +31,7 @@ const obtenerProyecto = async (req, res) => {
     return res.status(401).send({ msg: error.message });
   }
 
-  const tareas = await Tarea.find().where("proyecto").equals(proyecto._id);
-
-  res.send({ proyecto, tareas });
+  res.send(proyecto);
 };
 
 const editarProyecto = async (req, res) => {
@@ -84,7 +82,6 @@ const eliminarProyecto = async (req, res) => {
 const agregarColaborador = (req, res) => {};
 
 const eliminarColaborador = (req, res) => {};
-
 
 export {
   obtenerProyectos,
