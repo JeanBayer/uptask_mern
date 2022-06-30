@@ -9,9 +9,9 @@ const FormularioProyecto = () => {
   const [fechaEntrega, setFechaEntrega] = useState("");
   const [cliente, setCliente] = useState("");
 
-  const { alerta, mostrarAlerta } = useProyectos();
+  const { alerta, mostrarAlerta, submitProyecto } = useProyectos();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if ([nombre, descripcion, fechaEntrega, cliente].includes("")) {
       mostrarAlerta({
@@ -20,6 +20,17 @@ const FormularioProyecto = () => {
       });
       return;
     }
+
+    await submitProyecto({
+      nombre,
+      descripcion,
+      fechaEntrega,
+      cliente,
+    });
+    setNombre("");
+    setDescripcion("");
+    setFechaEntrega("");
+    setCliente("");
   };
 
   const { msg } = alerta;
