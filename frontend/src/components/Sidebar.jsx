@@ -9,7 +9,7 @@ const Sidebar = () => {
       <p className="text-xl font-bold">Hola: {auth.nombre}</p>
       <Link
         to="crear-proyecto"
-        className="bg-sky-600 w-full p3 text-white uppercase font-bold block text-center mt-5 rounded-lg"
+        className="bg-sky-600 w-full p-3 text-white uppercase font-bold block text-center mt-5 rounded-lg"
       >
         Nuevo Proyecto
       </Link>
