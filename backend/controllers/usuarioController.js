@@ -109,11 +109,9 @@ const comprobarToken = async (req, res) => {
   const usuario = await Usuario.findOne({ token });
 
   if (!usuario) {
-    console.log("token No valido");
     const error = new Error("Token no valido");
     return res.status(403).json({ msg: error.message });
   }
-  console.log("token valido");
   return res.status(200).json({ msg: "Token valido" });
 };
 
