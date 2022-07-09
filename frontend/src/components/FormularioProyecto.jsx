@@ -1,18 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useProyectos from "../hooks/useProyectos";
 import Alerta from "./Alerta";
 import InputFormulario from "./InputFormulario";
+import { useParams } from "react-router-dom";
 
 const FormularioProyecto = () => {
+  const [id, setId] = useState(null);
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fechaEntrega, setFechaEntrega] = useState("");
   const [cliente, setCliente] = useState("");
 
-  const { alerta, mostrarAlerta, submitProyecto } = useProyectos();
+  const { alerta, mostrarAlerta, submitProyecto, proyecto } = useProyectos();
+  const params = useParams();
+
+  useEffect(() => {
+    if (params.id) {
+      setId(proyecto._id);
+      setNombre(proyecto.nombre);
+      setDescripcion(proyecto.descripcion);
+      setFechaEntrega(proyecto.fechaEntrega?.split("T")[0]);
+      setCliente(proyecto.cliente);
+    }
+  }, [params]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if ([nombre, descripcion, fechaEntrega, cliente].includes("")) {
       mostrarAlerta({
         msg: "Todos los campos son obligatorios",
@@ -22,11 +36,14 @@ const FormularioProyecto = () => {
     }
 
     await submitProyecto({
+      id,
       nombre,
       descripcion,
       fechaEntrega,
       cliente,
     });
+
+    setId(null);
     setNombre("");
     setDescripcion("");
     setFechaEntrega("");
@@ -79,7 +96,7 @@ const FormularioProyecto = () => {
 
       <input
         type="submit"
-        value="crear proyecto"
+        value={id ? "actualizar proyecto" : "crear proyecto"}
         className="bg-sky-600 w-full p-3 uppercase font-bold text-white rounded cursor-pointer hover:bg-sky-700 transition-colors"
       />
     </form>

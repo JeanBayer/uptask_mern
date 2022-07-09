@@ -42,7 +42,15 @@ const ProyectosProvider = ({ children }) => {
     }, 5000);
   };
 
-  const submitProyecto = async (proyecto) => {
+  const submitProyecto = async (proyectoParametro) => {
+    if (proyectoParametro.id) {
+      await editarProyecto(proyectoParametro);
+    } else {
+      await nuevoProyecto(proyectoParametro);
+    }
+  };
+
+  const editarProyecto = async (proyectoParametro) => {
     const token = localStorage.getItem("token");
     if (!token) {
       setAlerta({ msg: "Token no valido", error: true });
@@ -55,7 +63,43 @@ const ProyectosProvider = ({ children }) => {
       },
     };
     try {
-      const { data } = await clienteAxios.post("/proyectos", proyecto, config);
+      const { data } = await clienteAxios.put(
+        `/proyectos/${proyectoParametro.id}`,
+        proyectoParametro,
+        config
+      );
+      const proyectosActualizados = proyectos.map((p) =>
+        p._id === data._id ? data : p
+      );
+      setAlerta({ msg: "Proyecto actualizado", error: false });
+      setProyectos(proyectosActualizados);
+      setTimeout(() => {
+        setAlerta({});
+        navigate("/proyectos");
+      }, 3000);
+    } catch (error) {
+      setAlerta({ msg: error.response.data.msg, error: true });
+    }
+  };
+
+  const nuevoProyecto = async (proyectoParametro) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setAlerta({ msg: "Token no valido", error: true });
+      return;
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const { data } = await clienteAxios.post(
+        "/proyectos",
+        proyectoParametro,
+        config
+      );
       setAlerta({ msg: "Proyecto creado", error: false });
       setProyectos([...proyectos, data]);
       setTimeout(() => {
