@@ -71,8 +71,8 @@ const ProyectosProvider = ({ children }) => {
       const proyectosActualizados = proyectos.map((p) =>
         p._id === data._id ? data : p
       );
-      setAlerta({ msg: "Proyecto actualizado", error: false });
       setProyectos(proyectosActualizados);
+      setAlerta({ msg: "Proyecto actualizado", error: false });
       setTimeout(() => {
         setAlerta({});
         navigate("/proyectos");
@@ -102,6 +102,32 @@ const ProyectosProvider = ({ children }) => {
       );
       setAlerta({ msg: "Proyecto creado", error: false });
       setProyectos([...proyectos, data]);
+      setTimeout(() => {
+        setAlerta({});
+        navigate("/proyectos");
+      }, 3000);
+    } catch (error) {
+      setAlerta({ msg: error.response.data.msg, error: true });
+    }
+  };
+
+  const eliminarProyecto = async (id) => {
+    const token = localStorage.getItem("token");
+    if (!token) return setAlerta({ msg: "Token no valido", error: true });
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.delete(`/proyectos/${id}`, config);
+      const proyectosActualizados = proyectos.filter(
+        (proyectoState) => proyectoState._id !== id
+      );
+      setProyectos(proyectosActualizados);
+      setAlerta({ msg: data.msg, error: false });
       setTimeout(() => {
         setAlerta({});
         navigate("/proyectos");
@@ -143,6 +169,7 @@ const ProyectosProvider = ({ children }) => {
         alerta,
         mostrarAlerta,
         submitProyecto,
+        eliminarProyecto,
         obtenerProyecto,
         proyecto,
         cargando,
