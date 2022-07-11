@@ -25,6 +25,12 @@ const proyectoSchema = moongose.Schema(
       type: moongose.Schema.Types.ObjectId,
       ref: "Usuario",
     },
+    tareas: [
+      {
+        type: moongose.Schema.Types.ObjectId,
+        ref: "Tarea",
+      },
+    ],
     colaboradores: [
       {
         type: moongose.Schema.Types.ObjectId,
