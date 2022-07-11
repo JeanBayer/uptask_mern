@@ -10,6 +10,7 @@ const ProyectosProvider = ({ children }) => {
   const [proyecto, setProyecto] = useState({});
   const [cargando, setCargando] = useState(false);
   const [modalFormularioTarea, setModalFormularioTarea] = useState(false);
+  const [tarea, setTarea] = useState({});
 
   const navigate = useNavigate();
 
@@ -165,6 +166,54 @@ const ProyectosProvider = ({ children }) => {
 
   const handleModalTarea = () => {
     setModalFormularioTarea(!modalFormularioTarea);
+    setTarea({});
+  };
+
+  const submitTarea = async (tarea) => {
+    if (tarea?.id) {
+      await editarTarea(tarea);
+    } else {
+      await crearTarea(tarea);
+    }
+  };
+
+  const editarTarea = async (tarea) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setAlerta({ msg: "Token no valido", error: true });
+      return;
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const { data } = await clienteAxios.put(
+        `/tareas/${tarea.id}`,
+        tarea,
+        config
+      );
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = proyectoActualizado.tareas.map(
+        (tareaState) => {
+          if (tareaState._id === data._id) {
+            return data;
+          }
+          return tareaState;
+        }
+      );
+      setProyecto(proyectoActualizado);
+      setAlerta({ msg: "Tarea actualizada", error: false });
+      setTimeout(() => {
+        setAlerta({});
+        setModalFormularioTarea(false);
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+      setAlerta({ msg: error.response.data.msg, error: true });
+    }
   };
 
   const crearTarea = async (tarea) => {
@@ -193,6 +242,11 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const handleModalEditarTarea = (tarea) => {
+    setTarea(tarea);
+    setModalFormularioTarea(true);
+  };
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -206,7 +260,9 @@ const ProyectosProvider = ({ children }) => {
         cargando,
         modalFormularioTarea,
         handleModalTarea,
-        crearTarea,
+        submitTarea,
+        handleModalEditarTarea,
+        tarea,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useProyectos from "../hooks/useProyectos";
 import Alerta from "./Alerta";
@@ -7,19 +7,37 @@ import { useParams } from "react-router-dom";
 const PRIORIDAD = ["Alta", "Media", "Baja"];
 
 const ModalFormularioTarea = () => {
+  const [id, setId] = useState("");
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [prioridad, setPrioridad] = useState("");
   const [fechaEntrega, setFechaEntrega] = useState("");
-  const { id } = useParams();
+  const params = useParams();
 
   const {
     modalFormularioTarea,
     handleModalTarea,
-    crearTarea,
+    submitTarea,
     mostrarAlerta,
     alerta,
+    tarea,
   } = useProyectos();
+
+  useEffect(() => {
+    if (tarea._id) {
+      setId(tarea._id);
+      setNombre(tarea.nombre);
+      setDescripcion(tarea.descripcion);
+      setPrioridad(tarea.prioridad);
+      setFechaEntrega(tarea.fechaEntrega?.split("T")[0]);
+      return;
+    }
+    setId("");
+    setNombre("");
+    setDescripcion("");
+    setPrioridad("");
+    setFechaEntrega("");
+  }, [tarea]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,13 +48,15 @@ const ModalFormularioTarea = () => {
       });
       return;
     }
-    await crearTarea({
+    await submitTarea({
+      id,
       nombre,
       descripcion,
       prioridad,
       fechaEntrega,
-      proyecto: id,
+      proyecto: params.id,
     });
+    setId("");
     setNombre("");
     setDescripcion("");
     setPrioridad("");
@@ -110,7 +130,7 @@ const ModalFormularioTarea = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    Crear Tarea
+                    {id ? "Editar Tarea" : "Crear Tarea"}
                   </Dialog.Title>
                   <form className="my-10" onSubmit={handleSubmit}>
                     {msg && <Alerta alerta={alerta} />}
@@ -185,7 +205,7 @@ const ModalFormularioTarea = () => {
                     <input
                       type="submit"
                       className="bg-sky-600 hover:bg-sky-700 p-3 uppercase w-full cursor-pointer transition-colors  duration-500 text-white text-sm font-bold text-center rounded"
-                      value="Crear Tarea"
+                      value={id ? "Editar Tarea" : "Crear Tarea"}
                     />
                   </form>
                 </div>
