@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import LoaderSkeleton from "../components/LoaderSkeleton";
 import useProyectos from "../hooks/useProyectos";
-import ModalFormularioTarea from "../components/ModalFormularioTarea";
+import LoaderSkeleton from "../components/LoaderSkeleton";
 import Tarea from "../components/Tarea";
+import ModalFormularioTarea from "../components/ModalFormularioTarea";
+import ModalEliminarTarea from "../components/ModalEliminarTarea";
 
 const Proyecto = () => {
   const { id } = useParams();
@@ -76,6 +77,7 @@ const Proyecto = () => {
       </div>
 
       <ModalFormularioTarea />
+      <ModalEliminarTarea />
     </>
   );
 };
