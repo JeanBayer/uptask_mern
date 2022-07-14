@@ -5,10 +5,11 @@ import LoaderSkeleton from "../components/LoaderSkeleton";
 import Tarea from "../components/Tarea";
 import ModalFormularioTarea from "../components/ModalFormularioTarea";
 import ModalEliminarTarea from "../components/ModalEliminarTarea";
+import Alerta from "../components/Alerta";
 
 const Proyecto = () => {
   const { id } = useParams();
-  const { obtenerProyecto, proyecto, cargando, handleModalTarea } =
+  const { obtenerProyecto, proyecto, cargando, handleModalTarea, alerta } =
     useProyectos();
   useEffect(() => {
     obtenerProyecto(id);
@@ -19,6 +20,8 @@ const Proyecto = () => {
   if (cargando) {
     return <LoaderSkeleton />;
   }
+
+  const { msg } = alerta;
 
   return (
     <>
@@ -64,6 +67,11 @@ const Proyecto = () => {
         Nueva tarea
       </button>
       <p className="font-bold text-xl mt-10">Tareas del Proyecto</p>
+      <div className="flex justify-center">
+        <div className="md:w-1/3 lg:w-1/4">
+          {msg && <Alerta alerta={alerta} />}
+        </div>
+      </div>
       <div className="bg-white shadow mt-10 rounded-lg">
         {proyecto.tareas?.length > 0 ? (
           proyecto.tareas.map((tarea) => (

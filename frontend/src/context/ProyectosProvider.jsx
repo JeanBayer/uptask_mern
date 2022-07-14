@@ -265,13 +265,12 @@ const ProyectosProvider = ({ children }) => {
         (tareaState) => tareaState._id !== tarea._id
       );
       setProyecto(proyectoActualizado);
-      setAlerta({ msg: "Tarea Eliminada", error: false });
+      setAlerta({ msg: data.msg, error: false });
+      setModalEliminarTarea(false);
       setTimeout(() => {
         setAlerta({});
-        setModalEliminarTarea(false);
       }, 1000);
     } catch (error) {
-      console.log(error);
       setAlerta({ msg: error.response.data.msg, error: true });
     }
   };
