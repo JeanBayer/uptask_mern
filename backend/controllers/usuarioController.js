@@ -91,7 +91,7 @@ const olvidePassword = async (req, res) => {
     usuario.token = generarId();
     await usuario.save();
 
-    //enviar email
+    // enviar email
     emailRecuperar({
       nombre: usuario.nombre,
       email: usuario.email,
