@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProyectosContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 const ProyectosProvider = ({ children }) => {
   const [proyectos, setProyectos] = useState([]);
   const [alerta, setAlerta] = useState({});
@@ -143,7 +144,7 @@ const ProyectosProvider = ({ children }) => {
   const obtenerProyecto = async (id) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      //TODO: agregar alerta
+      // TODO: agregar alerta
       return;
     }
 
@@ -159,7 +160,7 @@ const ProyectosProvider = ({ children }) => {
       const { data } = await clienteAxios(`/proyectos/${id}`, config);
       setProyecto(data);
     } catch (error) {
-      console.error(data);
+      console.error(error);
     } finally {
       setCargando(false);
     }
@@ -285,6 +286,10 @@ const ProyectosProvider = ({ children }) => {
     setModalEliminarTarea(!modalEliminarTarea);
   };
 
+  const submitColaborador = async (email) => {
+    console.log(email);
+  };
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -304,6 +309,7 @@ const ProyectosProvider = ({ children }) => {
         eliminarTarea,
         modalEliminarTarea,
         handleModalEliminarTarea,
+        submitColaborador,
       }}
     >
       {children}

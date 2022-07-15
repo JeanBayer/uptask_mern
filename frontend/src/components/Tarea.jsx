@@ -1,9 +1,10 @@
 import { formatearFecha } from "../helpers/formatearFecha";
 import useProyectos from "../hooks/useProyectos";
+import { PropTypes } from "prop-types";
 
 const Tarea = ({ tarea }) => {
   const { handleModalEditarTarea, handleModalEliminarTarea } = useProyectos();
-  const { nombre, descripcion, prioridad, fechaEntrega, _id, estado } = tarea;
+  const { nombre, descripcion, prioridad, fechaEntrega, estado } = tarea;
 
   return (
     <div className="border-b p-5 flex justify-between items-center">
@@ -40,4 +41,7 @@ const Tarea = ({ tarea }) => {
   );
 };
 
+Tarea.propTypes = {
+  tarea: PropTypes.object.isRequired,
+};
 export default Tarea;

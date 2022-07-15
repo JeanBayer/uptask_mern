@@ -1,4 +1,4 @@
-import React from "react";
+import { PropTypes } from "prop-types";
 
 const InputFormulario = ({
   estado,
@@ -34,6 +34,16 @@ const InputFormulario = ({
       )}
     </div>
   );
+};
+
+InputFormulario.propTypes = {
+  estado: PropTypes.string.isRequired,
+  cambiarEstado: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  titulo: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  textArea: PropTypes.bool,
 };
 
 export default InputFormulario;

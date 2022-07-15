@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import useProyectos from "../hooks/useProyectos";
 import LoaderSkeleton from "../components/LoaderSkeleton";
@@ -84,7 +84,18 @@ const Proyecto = () => {
         )}
       </div>
 
+      <div className="flex items-center justify-between mt-10 ">
+        <h1 className="font-bold text-xl">Colaboradores</h1>
+        <Link
+          to={`/proyectos/nuevo-colaborador/${proyecto._id}`}
+          className="text-gray-400 hover:text-black uppercase font-bold"
+        >
+          Añadir
+        </Link>
+      </div>
+
       <ModalFormularioTarea />
+
       <ModalEliminarTarea />
     </>
   );

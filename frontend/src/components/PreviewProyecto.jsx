@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { PropTypes } from "prop-types";
 
 const PreviewProyecto = ({ proyecto }) => {
   const { nombre, _id, cliente } = proyecto;
@@ -16,6 +17,10 @@ const PreviewProyecto = ({ proyecto }) => {
       </Link>
     </div>
   );
+};
+
+PreviewProyecto.propTypes = {
+  proyecto: PropTypes.object.isRequired,
 };
 
 export default PreviewProyecto;

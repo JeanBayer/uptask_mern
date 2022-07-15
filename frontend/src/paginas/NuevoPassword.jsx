@@ -16,7 +16,7 @@ const NuevoPassword = () => {
 
       console.log(url);
       try {
-        const { data } = await clienteAxios(url);
+        await clienteAxios(url);
         setTokenValido(true);
       } catch (error) {
         setTokenValido(false);
