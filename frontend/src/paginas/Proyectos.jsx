@@ -21,9 +21,7 @@ const Proyectos = () => {
       try {
         const { data } = await clienteAxios("/proyectos", config);
         setProyectos(data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     if (proyectos.length === 0) {
       obtenerProyectos();

@@ -14,7 +14,6 @@ const NuevoPassword = () => {
     const comprobarToken = async () => {
       const url = `/usuarios/olvide-password/${token}`;
 
-      console.log(url);
       try {
         await clienteAxios(url);
         setTokenValido(true);
