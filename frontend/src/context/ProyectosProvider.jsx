@@ -13,6 +13,8 @@ const ProyectosProvider = ({ children }) => {
   const [tarea, setTarea] = useState({});
   const [modalEliminarTarea, setModalEliminarTarea] = useState(false);
   const [colaborador, setColaborador] = useState({});
+  const [modalEliminarColaborador, setModalEliminarColaborador] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -346,6 +348,48 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const handleModalEliminarColaborador = (colaborador) => {
+    setModalEliminarColaborador(!modalEliminarColaborador);
+    setColaborador(colaborador);
+  };
+
+  const eliminarColaborador = async () => {
+    setCargando(true);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setAlerta({ msg: "Token no valido", error: true });
+      return;
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const { data } = await clienteAxios.post(
+        `/proyectos/eliminar-colaborador/${proyecto._id}`,
+        { id: colaborador._id },
+        config
+      );
+      const nuevoProyecto = { ...proyecto };
+      nuevoProyecto.colaboradores = nuevoProyecto.colaboradores.filter(
+        (colaboradorState) => colaboradorState._id !== colaborador._id
+      );
+      setProyecto(nuevoProyecto);
+      setColaborador({});
+      setModalEliminarColaborador(false);
+      setAlerta({ msg: data.msg, error: false });
+      setTimeout(() => {
+        setAlerta({});
+      }, 1000);
+    } catch (error) {
+      setAlerta({ msg: error.response.data.msg, error: true });
+    } finally {
+      setCargando(false);
+    }
+  };
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -370,6 +414,9 @@ const ProyectosProvider = ({ children }) => {
         submitColaborador,
         colaborador,
         agregarColaborador,
+        handleModalEliminarColaborador,
+        modalEliminarColaborador,
+        eliminarColaborador,
       }}
     >
       {children}
