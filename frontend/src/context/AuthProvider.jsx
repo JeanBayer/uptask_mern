@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ setAuth, auth, cargando }}>
+    <AuthContext.Provider value={{ setAuth, auth, cargando, setCargando }}>
       {children}
     </AuthContext.Provider>
   );

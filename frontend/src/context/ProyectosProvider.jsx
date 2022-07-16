@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const ProyectosContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 const ProyectosProvider = ({ children }) => {
   const [proyectos, setProyectos] = useState([]);
   const [alerta, setAlerta] = useState({});
@@ -293,7 +292,9 @@ const ProyectosProvider = ({ children }) => {
   return (
     <ProyectosContext.Provider
       value={{
+        setProyectos,
         proyectos,
+        setAlerta,
         alerta,
         mostrarAlerta,
         submitProyecto,

@@ -1,9 +1,34 @@
+import { useEffect } from "react";
 import useProyectos from "../hooks/useProyectos";
 import PreviewProyecto from "../components/PreviewProyecto";
+import clienteAxios from "../config/clienteAxios";
 
 const Proyectos = () => {
-  const { proyectos } = useProyectos();
-  console.log(proyectos);
+  const { proyectos, setProyectos, setAlerta } = useProyectos();
+  useEffect(() => {
+    const obtenerProyectos = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setAlerta({ msg: "Token no valido", error: true });
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      try {
+        const { data } = await clienteAxios("/proyectos", config);
+        setProyectos(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (proyectos.length === 0) {
+      obtenerProyectos();
+    }
+  }, []);
   return (
     <>
       <h1 className="text-4xl font-black">Proyectos</h1>
