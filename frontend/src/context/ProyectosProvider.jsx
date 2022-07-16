@@ -140,9 +140,10 @@ const ProyectosProvider = ({ children }) => {
   };
 
   const obtenerProyecto = async (id) => {
+    setAlerta({});
     const token = localStorage.getItem("token");
     if (!token) {
-      // TODO: agregar alerta
+      setAlerta({ msg: "Token no existe", error: true });
       return;
     }
 
@@ -158,7 +159,7 @@ const ProyectosProvider = ({ children }) => {
       const { data } = await clienteAxios(`/proyectos/${id}`, config);
       setProyecto(data);
     } catch (error) {
-      console.error(error);
+      setAlerta({ msg: error.response.data.msg, error: true });
     } finally {
       setCargando(false);
     }
@@ -283,6 +284,7 @@ const ProyectosProvider = ({ children }) => {
   };
 
   const submitColaborador = async (email) => {
+    setColaborador({});
     setCargando(true);
     const token = localStorage.getItem("token");
     if (!token) {
@@ -313,8 +315,35 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
-  const agregarColaborador = async (colaborador) => {
-    console.log(colaborador);
+  const agregarColaborador = async (email) => {
+    setCargando(true);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setAlerta({ msg: "Token no valido", error: true });
+      return;
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const { data } = await clienteAxios.post(
+        `/proyectos/colaboradores/${proyecto._id}`,
+        email,
+        config
+      );
+      setColaborador({});
+      setAlerta({ msg: data.msg, error: false });
+      setTimeout(() => {
+        setAlerta({});
+      }, 1000);
+    } catch (error) {
+      setAlerta({ msg: error.response.data.msg, error: true });
+    } finally {
+      setCargando(false);
+    }
   };
 
   return (
