@@ -6,14 +6,16 @@ import LoaderSkeleton from "../components/LoaderSkeleton";
 
 const NuevoColaborador = () => {
   const { id } = useParams();
-  const { obtenerProyecto, proyecto, cargando } = useProyectos();
+  const {
+    obtenerProyecto,
+    proyecto,
+    cargando,
+    colaborador,
+    agregarColaborador,
+  } = useProyectos();
   useEffect(() => {
     obtenerProyecto(id);
   }, []);
-
-  if (cargando) {
-    return <LoaderSkeleton />;
-  }
 
   return (
     <>
@@ -23,6 +25,30 @@ const NuevoColaborador = () => {
       <div className="mt-10 flex justify-center">
         <FormularioColaborador />
       </div>
+      {cargando ? (
+        <LoaderSkeleton />
+      ) : (
+        colaborador?._id && (
+          <div className="mt-10 flex justify-center">
+            <div className="bg-white py-10 px-5 md:w-1/2 rounded-lg shadow">
+              <h2 className="text-2xl font-bold text-center mb-10">
+                Resultado:
+              </h2>
+              <div className="flex justify-between items-center">
+                <p>{colaborador.nombre}</p>
+                <button
+                  className="bg-slate-500 px-5 py-2 rounded-lg font-bold text-white text-sm"
+                  onClick={() =>
+                    agregarColaborador({ email: colaborador.email })
+                  }
+                >
+                  Agregar al Proyecto
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      )}
     </>
   );
 };

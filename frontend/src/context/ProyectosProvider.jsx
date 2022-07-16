@@ -12,6 +12,7 @@ const ProyectosProvider = ({ children }) => {
   const [modalFormularioTarea, setModalFormularioTarea] = useState(false);
   const [tarea, setTarea] = useState({});
   const [modalEliminarTarea, setModalEliminarTarea] = useState(false);
+  const [colaborador, setColaborador] = useState({});
 
   const navigate = useNavigate();
 
@@ -31,9 +32,7 @@ const ProyectosProvider = ({ children }) => {
       try {
         const { data } = await clienteAxios("/proyectos", config);
         setProyectos(data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     obtenerProyectos();
   }, []);
@@ -212,7 +211,6 @@ const ProyectosProvider = ({ children }) => {
         setModalFormularioTarea(false);
       }, 1000);
     } catch (error) {
-      console.log(error);
       setAlerta({ msg: error.response.data.msg, error: true });
     }
   };
@@ -238,7 +236,6 @@ const ProyectosProvider = ({ children }) => {
         setModalFormularioTarea(false);
       }, 1000);
     } catch (error) {
-      console.log(error);
       setAlerta({ msg: error.response.data.msg, error: true });
     }
   };
@@ -286,7 +283,38 @@ const ProyectosProvider = ({ children }) => {
   };
 
   const submitColaborador = async (email) => {
-    console.log(email);
+    setCargando(true);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setAlerta({ msg: "Token no valido", error: true });
+      return;
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.post(
+        "/proyectos/colaboradores",
+        {
+          email,
+        },
+        config
+      );
+      setColaborador(data);
+      setAlerta({});
+    } catch (error) {
+      setAlerta({ msg: error.response.data.msg, error: true });
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const agregarColaborador = async (colaborador) => {
+    console.log(colaborador);
   };
 
   return (
@@ -311,6 +339,8 @@ const ProyectosProvider = ({ children }) => {
         modalEliminarTarea,
         handleModalEliminarTarea,
         submitColaborador,
+        colaborador,
+        agregarColaborador,
       }}
     >
       {children}
