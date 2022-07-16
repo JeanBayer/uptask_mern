@@ -92,7 +92,51 @@ const buscarColaborador = async (req, res) => {
   res.json(usuario);
 };
 
-const agregarColaborador = (req, res) => {};
+const agregarColaborador = async (req, res) => {
+  const { id } = req.params;
+  const { email } = req.body;
+  const proyecto = await Proyecto.findById(id);
+  if (!proyecto) {
+    const error = new Error("Proyecto no encontrado");
+    return res.status(404).send({ msg: error.message });
+  }
+
+  // solo el creador del proyecto puede agregar colaboradores
+  if (proyecto.creador.toString() !== req.usuario._id.toString()) {
+    const error = new Error("Accion no valida");
+    return res.status(401).send({ msg: error.message });
+  }
+
+  const usuario = await Usuario.findOne({ email }).select(
+    "-confirmado -createdAt -password -token -updatedAt -__v"
+  );
+
+  // verificar que el usuario exista
+  if (!usuario) {
+    const error = new Error("Usuario no encontrado");
+    return res.status(404).send({ msg: error.message });
+  }
+
+  // verificar que el usuario no sea el creador del proyecto
+  if (usuario._id.toString() === proyecto.creador.toString()) {
+    const error = new Error("No puedes agregarte a ti mismo");
+    return res.status(401).send({ msg: error.message });
+  }
+
+  // verificar que el usuario no este ya en el proyecto
+  if (proyecto.colaboradores.includes(usuario._id)) {
+    const error = new Error("El usuario ya esta en el proyecto");
+    return res.status(401).send({ msg: error.message });
+  }
+
+  proyecto.colaboradores.push(usuario._id);
+  try {
+    await proyecto.save();
+    res.json({ msg: "Usuario agregado" });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const eliminarColaborador = (req, res) => {};
 
