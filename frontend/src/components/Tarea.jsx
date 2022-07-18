@@ -4,9 +4,10 @@ import { PropTypes } from "prop-types";
 import useAdmin from "../hooks/useAdmin";
 
 const Tarea = ({ tarea }) => {
-  const { handleModalEditarTarea, handleModalEliminarTarea } = useProyectos();
+  const { handleModalEditarTarea, handleModalEliminarTarea, completarTarea } =
+    useProyectos();
   const admin = useAdmin();
-  const { nombre, descripcion, prioridad, fechaEntrega, estado } = tarea;
+  const { nombre, descripcion, prioridad, fechaEntrega, estado, _id } = tarea;
 
   return (
     <div className="border-b p-5 flex justify-between items-center">
@@ -25,15 +26,16 @@ const Tarea = ({ tarea }) => {
             Editar
           </button>
         )}
-        {estado ? (
-          <button className="bg-sky-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
-            Completa
-          </button>
-        ) : (
-          <button className="bg-gray-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
-            Incompleta
-          </button>
-        )}
+
+        <button
+          className={`${
+            estado ? "bg-sky-600" : "bg-gray-600"
+          } px-4 py-3 text-white uppercase font-bold text-sm rounded-lg`}
+          onClick={() => completarTarea(_id)}
+        >
+          {estado ? "Completa" : "Incompleta"}
+        </button>
+
         {admin && (
           <button
             className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"

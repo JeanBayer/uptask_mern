@@ -390,6 +390,38 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const completarTarea = async (id) => {
+    setAlerta({});
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setAlerta({ msg: "Token no valido", error: true });
+      return;
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.post(
+        `/tareas/estado/${id}`,
+        {},
+        config
+      );
+      const nuevoProyecto = { ...proyecto };
+      nuevoProyecto.tareas = nuevoProyecto.tareas.map((tareaState) =>
+        tareaState._id === data._id ? data : tareaState
+      );
+      setProyecto(nuevoProyecto);
+      setTarea({});
+    } catch (error) {
+      console.log(error);
+      setAlerta({ msg: error.response.data.msg, error: true });
+    }
+  };
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -417,6 +449,7 @@ const ProyectosProvider = ({ children }) => {
         handleModalEliminarColaborador,
         modalEliminarColaborador,
         eliminarColaborador,
+        completarTarea,
       }}
     >
       {children}
