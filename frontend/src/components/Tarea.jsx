@@ -7,15 +7,28 @@ const Tarea = ({ tarea }) => {
   const { handleModalEditarTarea, handleModalEliminarTarea, completarTarea } =
     useProyectos();
   const admin = useAdmin();
-  const { nombre, descripcion, prioridad, fechaEntrega, estado, _id } = tarea;
+  const {
+    nombre,
+    descripcion,
+    prioridad,
+    fechaEntrega,
+    estado,
+    _id,
+    completado,
+  } = tarea;
 
   return (
     <div className="border-b p-5 flex justify-between items-center">
-      <div>
+      <div className="flex flex-col items-start">
         <p className="mb-1 text-xl">{nombre}</p>
         <p className="mb-1 text-sm text-gray-500 uppercase">{descripcion}</p>
         <p className="mb-1 text-sm">{formatearFecha(fechaEntrega)}</p>
         <p className="mb-1 text-gray-600">{prioridad}</p>
+        {estado && (
+          <p className="text-xs bg-green-600 uppercase p-1 rounded-lg text-white">
+            Completado por {completado.nombre}
+          </p>
+        )}
       </div>
       <div className="flex gap-3">
         {admin && (
