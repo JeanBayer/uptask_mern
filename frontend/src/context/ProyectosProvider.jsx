@@ -161,7 +161,11 @@ const ProyectosProvider = ({ children }) => {
       const { data } = await clienteAxios(`/proyectos/${id}`, config);
       setProyecto(data);
     } catch (error) {
+      navigate("/proyectos");
       setAlerta({ msg: error.response.data.msg, error: true });
+      setTimeout(() => {
+        setAlerta({});
+      }, 1000);
     } finally {
       setCargando(false);
     }

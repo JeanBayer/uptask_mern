@@ -25,17 +25,7 @@ const Proyecto = () => {
     return <LoaderSkeleton />;
   }
 
-  const { msg, error } = alerta;
-
-  if (msg && error) {
-    return (
-      <div className="flex justify-center">
-        <div className="md:w-1/3 lg:w-1/4">
-          {msg && <Alerta alerta={alerta} />}
-        </div>
-      </div>
-    );
-  }
+  const { msg } = alerta;
 
   return (
     <>
