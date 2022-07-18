@@ -2,10 +2,12 @@ import Proyecto from "../models/Proyecto.js";
 import Usuario from "../models/Usuario.js";
 
 const obtenerProyectos = async (req, res) => {
-  const proyectos = await Proyecto.find()
-    .select("-tareas")
-    .where("creador")
-    .equals(req.usuario._id);
+  const proyectos = await Proyecto.find({
+    $or: [
+      { colaboradores: { $in: req.usuario } },
+      { creador: { $in: req.usuario } },
+    ],
+  }).select("-tareas");
   res.send(proyectos);
 };
 
@@ -30,7 +32,12 @@ const obtenerProyecto = async (req, res) => {
     return res.status(404).send({ msg: error.message });
   }
 
-  if (proyecto.creador.toString() !== req.usuario._id.toString()) {
+  if (
+    proyecto.creador.toString() !== req.usuario._id.toString() &&
+    !proyecto.colaboradores.some(
+      (colaborador) => colaborador._id.toString() === req.usuario._id.toString()
+    )
+  ) {
     const error = new Error("No tienes permisos para ver este proyecto");
     return res.status(401).send({ msg: error.message });
   }
